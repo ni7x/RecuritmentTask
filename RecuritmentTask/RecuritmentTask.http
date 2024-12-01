@@ -1,0 +1,6 @@
+@RecuritmentTask_HostAddress = http://localhost:5134
+
+GET {{RecuritmentTask_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
