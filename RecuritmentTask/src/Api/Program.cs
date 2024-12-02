@@ -2,10 +2,17 @@ using Microsoft.EntityFrameworkCore;
 using RecuritmentTask.src.Application.Interfaces;
 using RecuritmentTask.src.Application.Services;
 using RecuritmentTask.src.Infrastructure.Data;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration) 
+    .WriteTo.Console() 
+    .WriteTo.File("Logs/todo.log", rollingInterval: RollingInterval.Day) 
+    .CreateLogger();
 
 builder.Services.AddDbContext<TodoDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -16,6 +23,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Host.UseSerilog();
 
 
 var app = builder.Build();

@@ -8,6 +8,7 @@
         public string Description { get; set; }
         public double CompletedPercentage { get; set; } // [0,1]
 
+        public bool IsDone => CompletedPercentage >= 1.0;
 
 
     }
