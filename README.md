@@ -1,4 +1,5 @@
 Simple ToDo API Demo
+![image](https://github.com/user-attachments/assets/9014ed32-3127-47ab-bb41-cb155154b07d)
 
 ## Running the Application with Docker
 
