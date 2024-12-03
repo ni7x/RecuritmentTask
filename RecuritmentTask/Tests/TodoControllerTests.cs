@@ -5,6 +5,8 @@ using RecuritmentTask.src.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using RecuritmentTask.src.Domain.Entities;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
+
 
 namespace Tests;
 
@@ -97,7 +99,7 @@ public class TodoControllerTests
         _controller.ModelState.AddModelError("Title", "Title is required");
 
         // Act
-        var result = await _controller.CreateTodo(new Todo());
+        var result = await _controller.CreateTodo(new Todo { Id = 1, CompletedPercentage = 0.5, Title = "", ExpiryDate = DateTime.UtcNow });
 
         // Assert
         result.Should().BeOfType<BadRequestObjectResult>();
@@ -133,7 +135,7 @@ public class TodoControllerTests
     public async Task SetTodoCompletionPercentage_ShouldReturnOk_WhenValid()
     {
         // Arrange
-        var updatedTodo = new Todo { Id = 1, CompletedPercentage = 0.5 };
+        var updatedTodo = new Todo { Id = 1, CompletedPercentage = 0.5, Title = "", ExpiryDate = DateTime.UtcNow };
         _mockTodoService.Setup(s => s.SetTodoCompletionPercentageAsync(1, 0.5)).ReturnsAsync(updatedTodo);
 
         // Act
@@ -163,7 +165,7 @@ public class TodoControllerTests
     public async Task MarkTodoAsDone_ShouldReturnOk_WhenTodoIsMarkedDone()
     {
         // Arrange
-        var updatedTodo = new Todo { Id = 1, CompletedPercentage = 1.0 };
+        var updatedTodo = new Todo  { Id = 1, CompletedPercentage = 0.5, Title = "", ExpiryDate = DateTime.UtcNow  };
         _mockTodoService.Setup(s => s.MarkTodoAsDoneAsync(1)).ReturnsAsync(updatedTodo);
 
         // Act
@@ -179,7 +181,7 @@ public class TodoControllerTests
     public async Task MarkTodoAsDone_ShouldReturnNotFound_WhenTodoDoesNotExist()
     {
         // Arrange
-        _mockTodoService.Setup(s => s.MarkTodoAsDoneAsync(It.IsAny<int>())).ReturnsAsync((Todo?)null);
+        _mockTodoService.Setup(s => s.MarkTodoAsDoneAsync(It.IsAny<int>())).ReturnsAsync((Todo?)null!);
 
         // Act
         var result = await _controller.MarkTodoAsDone(99);

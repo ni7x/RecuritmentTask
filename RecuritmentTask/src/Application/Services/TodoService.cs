@@ -12,16 +12,15 @@ namespace RecuritmentTask.src.Application.Services
     {
         private readonly TodoDbContext _dbContext;
         private readonly IValidator<Todo> _validator;
-        private TodoDbContext dbContext;
 
         public TodoService(IValidator<Todo> validator, TodoDbContext dbContext)
         {
             _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
             _validator = validator ?? throw new ArgumentNullException(nameof(validator));
-
         }
 
-        public async Task<List<Todo>> GetAllTodosAsync()
+
+    public async Task<List<Todo>> GetAllTodosAsync()
         {
             return await _dbContext.Set<Todo>().ToListAsync();
         }
@@ -124,7 +123,7 @@ namespace RecuritmentTask.src.Application.Services
 
             if (todo == null)
             {
-                return null; 
+                throw new KeyNotFoundException($"Todo with ID {id} not found.");
             }
 
             todo.CompletedPercentage = completedPercentage; 

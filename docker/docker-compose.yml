@@ -22,8 +22,10 @@ services:
       - postgres
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - DB_HOST=postgres
+
     ports:
-      - "5000:80" 
+      - "8080:8080"  # HTTP
 
 volumes:
   postgres_data:
