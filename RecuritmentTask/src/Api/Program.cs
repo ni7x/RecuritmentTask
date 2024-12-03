@@ -1,6 +1,9 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using RecuritmentTask.src.Application.Interfaces;
 using RecuritmentTask.src.Application.Services;
+using RecuritmentTask.src.Application.Validators;
+using RecuritmentTask.src.Domain.Entities;
 using RecuritmentTask.src.Infrastructure.Data;
 using Serilog;
 
@@ -16,6 +19,8 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Services.AddDbContext<TodoDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped<IValidator<Todo>, TodoValidator>();
 
 builder.Services.AddScoped<ITodoService, TodoService>();
 
