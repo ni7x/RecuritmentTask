@@ -47,8 +47,12 @@ if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.MapGet("/", () => Results.Redirect("/swagger/index.html"));
 }
-
+else
+{
+    app.MapGet("/", () => Results.Content("Welcome to the API"));
+}
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

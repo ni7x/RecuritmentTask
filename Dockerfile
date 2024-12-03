@@ -4,8 +4,8 @@ WORKDIR /app
 
 # Copy the solution file and project files
 COPY RecuritmentTask.sln .  
-COPY RecuritmentTask/RecuritmentTask.csproj ./RecuritmentTask/ 
-COPY RecuritmentTask/Tests/Tests.csproj ./RecuritmentTask/Tests/  
+COPY RecuritmentTask/src/RecuritmentTask/RecuritmentTask.csproj ./RecuritmentTask/src/RecuritmentTask/RecuritmentTask/ 
+COPY RecuritmentTask/test/RecuritmentTaskTests/RecuritmentTaskTests.csproj ./RecuritmentTask/test/RecuritmentTaskTests/  
 
 # Copy the rest of the application files
 COPY RecuritmentTask/ ./RecuritmentTask/ 
@@ -14,11 +14,13 @@ COPY RecuritmentTask/ ./RecuritmentTask/
 RUN dotnet restore RecuritmentTask.sln 
 
 # Build the application
-RUN dotnet build RecuritmentTask/RecuritmentTask.csproj -c Release -o /app/build
+RUN dotnet build RecuritmentTask/src/RecuritmentTask/RecuritmentTask.csproj  -c Release -o /app/build
 
+# Run tests
+RUN dotnet test
 
 # Publish the application
-RUN dotnet publish RecuritmentTask/RecuritmentTask.csproj -c Release -o /app/publish
+RUN dotnet publish RecuritmentTask/src/RecuritmentTask/RecuritmentTask.csproj  -c Release -o /app/publish
 
 # Final stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime

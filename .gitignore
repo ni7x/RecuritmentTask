@@ -483,3 +483,4 @@ $RECYCLE.BIN/
 # Vim temporary swap files
 *.swp
 /RecuritmentTask/src/Infrastructure/Data/Migrations
+/RecuritmentTask/src/RecuritmentTask/Infrastructure/Data/Migrations
