@@ -1,10 +1,10 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using RecuritmentTask.src.Application.Interfaces;
-using RecuritmentTask.src.Application.Services;
 using RecuritmentTask.src.Application.Validators;
-using RecuritmentTask.src.Domain.Entities;
-using RecuritmentTask.src.Infrastructure.Data;
+using RecuritmentTask.src.RecruitmentTask.Application.Interfaces;
+using RecuritmentTask.src.RecruitmentTask.Application.Services;
+using RecuritmentTask.src.RecruitmentTask.Domain.Entities;
+using RecuritmentTask.src.RecruitmentTask.Infrastructure.Data;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,8 +17,12 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("Logs/todo.log", rollingInterval: RollingInterval.Day) 
     .CreateLogger();
 
+var dbHost = Environment.GetEnvironmentVariable("DB_HOST") ?? "localhost";
+var connectionString = $"Host={dbHost};Database=todo_db;Username=testuser;Password=testpassword";
+
 builder.Services.AddDbContext<TodoDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseNpgsql(connectionString));
+
 
 builder.Services.AddScoped<IValidator<Todo>, TodoValidator>();
 
@@ -33,6 +37,10 @@ builder.Host.UseSerilog();
 
 
 var app = builder.Build();
+
+await using var scope = app.Services.CreateAsyncScope();
+await using var db = scope.ServiceProvider.GetRequiredService<TodoDbContext>();
+await db.Database.MigrateAsync();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

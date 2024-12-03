@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RecuritmentTask.src.Api.Enums;
-using RecuritmentTask.src.Domain.Entities;
+using RecuritmentTask.src.RecruitmentTask.Api.Enums;
+using RecuritmentTask.src.RecruitmentTask.Domain.Entities;
 
-namespace RecuritmentTask.src.Application.Interfaces
+namespace RecuritmentTask.src.RecruitmentTask.Application.Interfaces
 {
     public interface ITodoService
     {

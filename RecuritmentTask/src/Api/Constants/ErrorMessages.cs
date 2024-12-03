@@ -1,4 +1,4 @@
-﻿namespace RecuritmentTask.src.Api.Constants
+﻿namespace RecuritmentTask.src.RecruitmentTask.Api.Constants
 {
     public static class ErrorMessages
     {

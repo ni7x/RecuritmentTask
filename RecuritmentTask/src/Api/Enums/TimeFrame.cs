@@ -1,4 +1,4 @@
-﻿namespace RecuritmentTask.src.Api.Enums
+﻿namespace RecuritmentTask.src.RecruitmentTask.Api.Enums
 {
     public enum TimeFrame
     {

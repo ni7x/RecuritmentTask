@@ -1,11 +1,11 @@
-﻿namespace RecuritmentTask.src.Domain.Entities
+﻿namespace RecuritmentTask.src.RecruitmentTask.Domain.Entities
 {
     public class Todo
     {
         public int Id { get; set; }
-        public DateTime ExpiryDate { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
+        public required DateTime ExpiryDate { get; set; }
+        public required string Title { get; set; }
+        public string Description { get; set; } = string.Empty;
         public double CompletedPercentage { get; set; } // [0,1]
 
         public bool IsDone => CompletedPercentage >= 1.0;

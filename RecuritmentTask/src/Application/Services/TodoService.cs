@@ -1,25 +1,17 @@
 ﻿using FluentValidation;
 using Microsoft.EntityFrameworkCore;
-using RecuritmentTask.src.Api.Enums;
-using RecuritmentTask.src.Application.Interfaces;
-using RecuritmentTask.src.Domain.Entities;
-using RecuritmentTask.src.Infrastructure.Data;
+using RecuritmentTask.src.RecruitmentTask.Api.Enums;
+using RecuritmentTask.src.RecruitmentTask.Application.Interfaces;
+using RecuritmentTask.src.RecruitmentTask.Domain.Entities;
+using RecuritmentTask.src.RecruitmentTask.Infrastructure.Data;
 using System.ComponentModel.DataAnnotations;
 
-namespace RecuritmentTask.src.Application.Services
+namespace RecuritmentTask.src.RecruitmentTask.Application.Services
 {
-    public class TodoService : ITodoService
+    public class TodoService(IValidator<Todo> validator, TodoDbContext dbContext) : ITodoService
     {
-        private readonly TodoDbContext _dbContext;
-        private readonly IValidator<Todo> _validator;
-        private TodoDbContext dbContext;
-
-        public TodoService(IValidator<Todo> validator, TodoDbContext dbContext)
-        {
-            _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
-            _validator = validator ?? throw new ArgumentNullException(nameof(validator));
-
-        }
+        private readonly TodoDbContext _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+        private readonly IValidator<Todo> _validator = validator ?? throw new ArgumentNullException(nameof(validator));
 
         public async Task<List<Todo>> GetAllTodosAsync()
         {
@@ -84,7 +76,7 @@ namespace RecuritmentTask.src.Application.Services
             var validationResult = await _validator.ValidateAsync(todo);
             if (!validationResult.IsValid)
             {
-                throw new FluentValidation.ValidationException(validationResult.Errors); 
+                throw new FluentValidation.ValidationException(validationResult.Errors);
             }
             await _dbContext.Set<Todo>().AddAsync(todo);
             await _dbContext.SaveChangesAsync();
@@ -120,15 +112,9 @@ namespace RecuritmentTask.src.Application.Services
                 throw new ArgumentOutOfRangeException("Completed percentage must be between 0.0 and 1.0.");
             }
 
-            var todo = await _dbContext.Set<Todo>().FindAsync(id);
-
-            if (todo == null)
-            {
-                return null; 
-            }
-
-            todo.CompletedPercentage = completedPercentage; 
-            await _dbContext.SaveChangesAsync(); 
+            var todo = await _dbContext.Set<Todo>().FindAsync(id) ?? throw new InvalidOperationException($"Todo with ID {id} not found.");
+            todo.CompletedPercentage = completedPercentage;
+            await _dbContext.SaveChangesAsync();
 
             return todo;
         }

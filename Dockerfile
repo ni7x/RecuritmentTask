@@ -16,11 +16,13 @@ RUN dotnet restore RecuritmentTask.sln
 # Build the application
 RUN dotnet build RecuritmentTask/RecuritmentTask.csproj -c Release -o /app/build
 
+
 # Publish the application
 RUN dotnet publish RecuritmentTask/RecuritmentTask.csproj -c Release -o /app/publish
 
 # Final stage
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+EXPOSE 8080
 WORKDIR /app
 
 # Copy the published app from the build stage

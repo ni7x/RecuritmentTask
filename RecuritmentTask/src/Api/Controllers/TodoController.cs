@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
-using RecuritmentTask.src.Api.Constants;
-using RecuritmentTask.src.Api.Enums;
-using RecuritmentTask.src.Application.Interfaces;
-using RecuritmentTask.src.Domain.Entities;
+using RecuritmentTask.src.RecruitmentTask.Api.Constants;
+using RecuritmentTask.src.RecruitmentTask.Api.Enums;
+using RecuritmentTask.src.RecruitmentTask.Application.Interfaces;
+using RecuritmentTask.src.RecruitmentTask.Domain.Entities;
 
-namespace RecuritmentTask.src.Api.Controllers
+namespace RecuritmentTask.src.RecruitmentTask.Api.Controllers
 {
     [ApiController]
     [Route("todo/")]
@@ -61,7 +61,7 @@ namespace RecuritmentTask.src.Api.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest(ModelState); 
+                return BadRequest(ModelState);
             }
 
             try
@@ -87,7 +87,7 @@ namespace RecuritmentTask.src.Api.Controllers
             try
             {
                 var updatedTodo = await _todoService.UpdateTodoAsync(todo);
-                return Ok(updatedTodo); 
+                return Ok(updatedTodo);
             }
             catch (Exception ex)
             {
@@ -128,13 +128,13 @@ namespace RecuritmentTask.src.Api.Controllers
                     return NotFound($"Todo with ID {id} not found.");
                 }
 
-                return Ok(updatedTodo); 
+                return Ok(updatedTodo);
             }
-            catch (ArgumentOutOfRangeException ex) 
+            catch (ArgumentOutOfRangeException ex)
             {
                 return BadRequest(ex.Message);
             }
-            catch (Exception ex)  
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while setting the completion percentage.");
                 return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessages.InternalError);
@@ -153,7 +153,7 @@ namespace RecuritmentTask.src.Api.Controllers
                     return NotFound($"Todo with ID {id} not found.");
                 }
 
-                return Ok(updatedTodo); 
+                return Ok(updatedTodo);
             }
             catch (Exception ex)
             {

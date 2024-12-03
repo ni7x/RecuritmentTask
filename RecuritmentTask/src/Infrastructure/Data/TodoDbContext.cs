@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using RecuritmentTask.src.Domain.Entities;
+using RecuritmentTask.src.RecruitmentTask.Domain.Entities;
 
-namespace RecuritmentTask.src.Infrastructure.Data
+namespace RecuritmentTask.src.RecruitmentTask.Infrastructure.Data
 {
     public class TodoDbContext : DbContext
     {
