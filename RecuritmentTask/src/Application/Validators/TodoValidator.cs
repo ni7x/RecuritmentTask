@@ -7,6 +7,8 @@ namespace RecuritmentTask.src.Application.Validators
     {
         public TodoValidator() {
             RuleFor(todo => todo.Title)
+                .NotNull()
+                    .WithMessage("Title is reqiured")
                 .NotEmpty()
                     .WithMessage("Title cannot be empty")
                 .MaximumLength(60)
@@ -21,6 +23,8 @@ namespace RecuritmentTask.src.Application.Validators
                     .WithMessage(todo => $"Percentage must be double number between 0.0 and 1.0. Provided percentage: {todo.CompletedPercentage}");
 
             RuleFor(todo => todo.ExpiryDate)
+                 .NotNull()
+                    .WithMessage("Expiry Date is reqiured")
                  .GreaterThan(DateTime.UtcNow)
                      .WithMessage(todo => $"Expiry date must be in the future. Provided date: {todo.ExpiryDate:yyyy-MM-dd HH:mm:ss}");
 

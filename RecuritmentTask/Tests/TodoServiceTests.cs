@@ -48,7 +48,7 @@ namespace RecuritmentTask.Tests
         }
 
         [Theory]
-        [MemberData(nameof(TestDataHelper.GetInvalidData), MemberType = typeof(TestDataHelper))]
+        [MemberData(nameof(TodoTestDataHelper.GetInvalidData), MemberType = typeof(TodoTestDataHelper))]
         public async Task CreateTodoAsync_ShouldThrowException_WhenTodoIsInvalid(string title, string description, string expiryDateString, double completedPercentage)
         {
             // Arrange

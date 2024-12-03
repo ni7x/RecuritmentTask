@@ -5,6 +5,10 @@ VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecuritmentTask", "RecuritmentTask\RecuritmentTask.csproj", "{3E312BB7-0C53-491D-8529-863814ED4531}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RecuritmentTask", "RecuritmentTask", "{D852CD0F-9ED5-45F4-9876-B182D3E04051}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "RecuritmentTask\Tests\Tests.csproj", "{FDA67C74-024B-417D-A357-423343A597A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,11 +19,19 @@ Global
 		{3E312BB7-0C53-491D-8529-863814ED4531}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E312BB7-0C53-491D-8529-863814ED4531}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E312BB7-0C53-491D-8529-863814ED4531}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FDA67C74-024B-417D-A357-423343A597A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FDA67C74-024B-417D-A357-423343A597A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FDA67C74-024B-417D-A357-423343A597A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FDA67C74-024B-417D-A357-423343A597A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {06544D73-A2A8-4997-8A8B-226E3BE20823}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{3E312BB7-0C53-491D-8529-863814ED4531} = {D852CD0F-9ED5-45F4-9876-B182D3E04051}
+		{FDA67C74-024B-417D-A357-423343A597A6} = {D852CD0F-9ED5-45F4-9876-B182D3E04051}
 	EndGlobalSection
 EndGlobal

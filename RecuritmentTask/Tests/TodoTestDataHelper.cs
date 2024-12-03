@@ -1,6 +1,6 @@
 ﻿namespace RecuritmentTask.Tests
 {
-    public static class TestDataHelper
+    public static class TodoTestDataHelper
     {
         public static IEnumerable<object[]> GetInvalidData()
         {
