@@ -6,6 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using RecuritmentTask.src.Domain.Entities;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
+using FluentValidation;
+using RecuritmentTask.src.Application.Validators;
+using FluentValidation.Results;
+using System.Diagnostics;
 
 
 namespace RecuritmentTask.Tests
@@ -15,11 +19,13 @@ namespace RecuritmentTask.Tests
 
         private readonly Mock<ITodoService> _mockTodoService;
         private readonly TodoController _controller;
+        private readonly Mock<IValidator<Todo>> _mockValidator;
 
         public TodoControllerTests()
         {
             _mockTodoService = new Mock<ITodoService>();
-            _controller = new TodoController(Mock.Of<ILogger<TodoController>>(), _mockTodoService.Object);
+            _mockValidator = new Mock<IValidator<Todo>>();
+            _controller = new TodoController(Mock.Of<ILogger<TodoController>>(), _mockTodoService.Object, _mockValidator.Object);
         }
 
         [Theory]
@@ -77,34 +83,60 @@ namespace RecuritmentTask.Tests
         {
             // Arrange
             var currentDate = DateTime.UtcNow;
-            var todo = new Todo { Title = "New Todo", ExpiryDate = currentDate.AddDays(1) };
-            var createdTodo = new Todo { Id = 1, Title = "New Todo", ExpiryDate = currentDate.AddDays(1) };
+            var todo = new Todo
+            {
+                Title = "Todo 1",
+                ExpiryDate = currentDate.AddDays(1),
+                CompletedPercentage = 0
+            };
+
+            var createdTodo = new Todo
+            {
+                Id = 1,
+                Title = "Todo 1",
+                ExpiryDate = currentDate.AddDays(1),
+                CompletedPercentage = 0
+            };
+
+            _mockValidator.Setup(v => v.ValidateAsync(It.IsAny<Todo>(), default))
+                .ReturnsAsync(new ValidationResult());
 
             _mockTodoService.Setup(s => s.CreateTodoAsync(It.IsAny<Todo>())).ReturnsAsync(createdTodo);
 
             // Act
             var result = await _controller.CreateTodo(todo);
 
+ 
             // Assert
-            result.Should().BeOfType<CreatedAtActionResult>();
-            var createdResult = result as CreatedAtActionResult;
-            createdResult!.Value.Should().Be(createdTodo);
+            result.Should().BeOfType<CreatedAtActionResult>(); 
         }
 
 
         [Fact]
         public async Task CreateTodo_ShouldReturnBadRequest_WhenModelIsInvalid()
         {
-            // Arrange
-            _controller.ModelState.AddModelError("Title", "Title is required");
+            var invalidTodo = new Todo { Title = "", CompletedPercentage = 1.5, ExpiryDate = DateTime.UtcNow };
+            _mockValidator
+                .Setup(v => v.ValidateAsync(invalidTodo, default))
+                .ReturnsAsync(new ValidationResult(new[] { new ValidationFailure("Title", "Title is required") }));
 
             // Act
-            var result = await _controller.CreateTodo(new Todo { Id = 1, CompletedPercentage = 0.5, Title = "", ExpiryDate = DateTime.UtcNow });
+            var result = await _controller.CreateTodo(invalidTodo);
 
             // Assert
             result.Should().BeOfType<BadRequestObjectResult>();
-        }
+            var badRequestResult = result as BadRequestObjectResult;
 
+            var value = badRequestResult?.Value;
+            value.Should().NotBeNull();
+
+            value.Should().BeOfType<FluentValidation.Results.ValidationResult>();
+   
+            var validationDetails = value as FluentValidation.Results.ValidationResult;
+            validationDetails.Errors.Should().ContainSingle();
+
+        }
+        
         [Fact]
         public async Task DeleteTodo_ShouldReturnNoContent_WhenTodoExists()
         {

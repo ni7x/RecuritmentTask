@@ -1,3 +1,5 @@
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using RecuritmentTask.src.Api.Constants;
 using RecuritmentTask.src.Api.Enums;
@@ -13,14 +15,15 @@ namespace RecuritmentTask.src.Api.Controllers
     {
         private readonly ILogger<TodoController> _logger;
         private readonly ITodoService _todoService;
-
-        public TodoController(ILogger<TodoController> logger, ITodoService todoService)
+        private readonly IValidator<Todo> _validator;
+        public TodoController(ILogger<TodoController> logger, ITodoService todoService, IValidator<Todo> validator)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
             _todoService = todoService ?? throw new ArgumentNullException(nameof(todoService));
+            _validator = validator ?? throw new ArgumentNullException(nameof(validator));
         }
 
-  
+
         [HttpGet]
         [SwaggerOperation(Summary = "Get all Todos", Description = "Retrieves all the Todos")]
         [SwaggerResponse(200, "Successfully retrieved the Todos", typeof(IEnumerable<Todo>))]
@@ -73,9 +76,10 @@ namespace RecuritmentTask.src.Api.Controllers
         [SwaggerResponse(500, "Internal server error while creating the Todo")]
         public async Task<IActionResult> CreateTodo([FromBody] Todo todo)
         {
-            if (!ModelState.IsValid)
+            ValidationResult result = await _validator.ValidateAsync(todo);
+            if (!result.IsValid)
             {
-                return BadRequest(ModelState); 
+                return BadRequest(result); 
             }
 
             try
@@ -86,7 +90,7 @@ namespace RecuritmentTask.src.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while creating the Todo.");
-                return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessages.InternalError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessages.InternalError + ex);
             }
         }
 
@@ -97,9 +101,11 @@ namespace RecuritmentTask.src.Api.Controllers
         [SwaggerResponse(500, "Internal server error while updating the Todo")]
         public async Task<IActionResult> UpdateTodo([FromBody] Todo todo)
         {
-            if (!ModelState.IsValid)
+            ValidationResult result = await _validator.ValidateAsync(todo);
+        
+            if (!result.IsValid)
             {
-                return BadRequest(ModelState);
+                return BadRequest(result);
             }
 
             try
@@ -110,7 +116,7 @@ namespace RecuritmentTask.src.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while updating the Todo.");
-                return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessages.InternalError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessages.InternalError + ex);
             }
         }
 
@@ -134,7 +140,7 @@ namespace RecuritmentTask.src.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while updating the Todo.");
-                return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessages.InternalError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessages.InternalError + ex);
             }
         }
 
@@ -164,7 +170,7 @@ namespace RecuritmentTask.src.Api.Controllers
             catch (Exception ex)  
             {
                 _logger.LogError(ex, "An error occurred while setting the completion percentage.");
-                return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessages.InternalError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessages.InternalError + ex);
             }
         }
 
@@ -189,7 +195,7 @@ namespace RecuritmentTask.src.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while marking the Todo as done.");
-                return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessages.InternalError);
+                return StatusCode(StatusCodes.Status500InternalServerError, ErrorMessages.InternalError + ex);
             }
         }
     }
