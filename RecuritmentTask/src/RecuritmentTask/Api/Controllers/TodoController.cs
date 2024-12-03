@@ -3,6 +3,7 @@ using RecuritmentTask.src.Api.Constants;
 using RecuritmentTask.src.Api.Enums;
 using RecuritmentTask.src.Application.Interfaces;
 using RecuritmentTask.src.Domain.Entities;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace RecuritmentTask.src.Api.Controllers
 {
@@ -19,7 +20,10 @@ namespace RecuritmentTask.src.Api.Controllers
             _todoService = todoService ?? throw new ArgumentNullException(nameof(todoService));
         }
 
+  
         [HttpGet]
+        [SwaggerOperation(Summary = "Get all Todos", Description = "Retrieves all the Todos")]
+        [SwaggerResponse(200, "Successfully retrieved the Todos", typeof(IEnumerable<Todo>))]
         public async Task<IActionResult> GetAllTodos()
         {
             var todos = await _todoService.GetAllTodosAsync();
@@ -27,6 +31,9 @@ namespace RecuritmentTask.src.Api.Controllers
         }
 
         [HttpGet("{id:int}")]
+        [SwaggerOperation(Summary = "Get Todo by ID", Description = "Retrieves a specific Todo by its ID.")]
+        [SwaggerResponse(200, "Successfully retrieved the Todo", typeof(Todo))]
+        [SwaggerResponse(404, "Todo with the specified ID not found")]
         public async Task<IActionResult> GetTodoById(int id)
         {
             try
@@ -42,6 +49,9 @@ namespace RecuritmentTask.src.Api.Controllers
         }
 
         [HttpGet("incoming")]
+        [SwaggerOperation(Summary = "Get incoming Todos by TimeFrame", Description = "Retrieves Todos that fall within the specified timeframe.(Today, Tommorow, CurrentWeek)")]
+        [SwaggerResponse(200, "Successfully retrieved Todos for the specified timeframe", typeof(IEnumerable<Todo>))]
+        [SwaggerResponse(500, "Internal server error while fetching Todos")]
         public async Task<IActionResult> GetIncomingTodos([FromQuery] TimeFrame timeFrame)
         {
             try
@@ -57,6 +67,10 @@ namespace RecuritmentTask.src.Api.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(Summary = "Create a new Todo", Description = "Creates a new Todo.")]
+        [SwaggerResponse(201, "Successfully created a Todo", typeof(Todo))]
+        [SwaggerResponse(400, "Bad request due to invalid data")]
+        [SwaggerResponse(500, "Internal server error while creating the Todo")]
         public async Task<IActionResult> CreateTodo([FromBody] Todo todo)
         {
             if (!ModelState.IsValid)
@@ -77,6 +91,10 @@ namespace RecuritmentTask.src.Api.Controllers
         }
 
         [HttpPut]
+        [SwaggerOperation(Summary = "Update an existing Todo", Description = "Updatesan  existing Todo.")]
+        [SwaggerResponse(200, "Successfully updated the Todo", typeof(Todo))]
+        [SwaggerResponse(400, "Bad request due to invalid data")]
+        [SwaggerResponse(500, "Internal server error while updating the Todo")]
         public async Task<IActionResult> UpdateTodo([FromBody] Todo todo)
         {
             if (!ModelState.IsValid)
@@ -97,6 +115,10 @@ namespace RecuritmentTask.src.Api.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [SwaggerOperation(Summary = "Delete a Todo", Description = "Deletes a Todo by its ID.")]
+        [SwaggerResponse(204, "Successfully deleted the Todo")]
+        [SwaggerResponse(404, "Todo with the specified ID not found")]
+        [SwaggerResponse(500, "Internal server error while deleting the Todo")]
         public async Task<IActionResult> DeleteTodo(int id)
         {
             try
@@ -117,6 +139,11 @@ namespace RecuritmentTask.src.Api.Controllers
         }
 
         [HttpPatch("{id:int}/change-percentage")]
+        [SwaggerOperation(Summary = "Change Todo Percentage", Description = "Changes Todo's completion percentage([0,1]).")]
+        [SwaggerResponse(200, "Successfully updated the Todo completion percentage", typeof(Todo))]
+        [SwaggerResponse(400, "Bad request due to invalid percentage")]
+        [SwaggerResponse(404, "Todo with the specified ID not found")]
+        [SwaggerResponse(500, "Internal server error while updating completion percentage")]
         public async Task<IActionResult> SetTodoCompletionPercentage(int id, [FromBody] double completedPercentage)
         {
             try
@@ -142,6 +169,10 @@ namespace RecuritmentTask.src.Api.Controllers
         }
 
         [HttpPatch("{id:int}/mark-as-done")]
+        [SwaggerOperation(Summary = "Mark Todo as done", Description = "Marks a Todo as completed.")]
+        [SwaggerResponse(200, "Successfully marked the Todo as done", typeof(Todo))]
+        [SwaggerResponse(404, "Todo with the specified ID not found")]
+        [SwaggerResponse(500, "Internal server error")]
         public async Task<IActionResult> MarkTodoAsDone(int id)
         {
             try
