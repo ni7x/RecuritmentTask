@@ -133,7 +133,7 @@ namespace RecuritmentTask.Tests
             value.Should().BeOfType<FluentValidation.Results.ValidationResult>();
    
             var validationDetails = value as FluentValidation.Results.ValidationResult;
-            validationDetails.Errors.Should().ContainSingle();
+            validationDetails?.Errors.Should().ContainSingle();
 
         }
         
